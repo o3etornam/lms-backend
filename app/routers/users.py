@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,7 +25,7 @@ async def create_user(user: schema.UserCreate, db:AsyncSession = Depends(get_db)
     await db.refresh(new_user)
     return new_user
 
-@router.get('', response_model= List[schema.UserPublic])  
+@router.get('', response_model= list[schema.UserPublic])  
 async def get_users(db:AsyncSession = Depends(get_db)):
     select_query = select(models.User)
     users = await db.execute(select_query)
