@@ -25,4 +25,19 @@ async def create_user(user: schema.UserCreate, db:AsyncSession = Depends(get_db)
     await db.commit()
     await db.refresh(new_user)
     return new_user
+
+@router.get('', response_model= List[schema.UserPublic])  
+async def get_users(db:AsyncSession = Depends(get_db)):
+    select_query = select(models.User)
+    users = await db.execute(select_query)
+    return users.scalars().all()
+
+@router.get('/{id}', response_model= schema.UserPublic)
+async def get_user(id: int, db:AsyncSession = Depends(get_db)):
+    select_query = select(models.User).where(models.User.id == id)
+    result = await db.execute(select_query)
+    user = result.scalar_one_or_none()
     
+    if user:
+        return user
+    raise HTTPException(status_code=404, detail=f'User with id {id} doesn\'t exsit')
