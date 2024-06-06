@@ -32,7 +32,7 @@ async def get_users(db:AsyncSession = Depends(get_db)):
     return users.scalars().all()
 
 @router.get('/{id}', response_model= schema.UserPublic)
-async def get_user(id: int, db:AsyncSession = Depends(get_db)):
+async def get_user(id: str, db:AsyncSession = Depends(get_db)):
     select_query = select(models.User).where(models.User.id == id)
     result = await db.execute(select_query)
     user = result.scalar_one_or_none()
