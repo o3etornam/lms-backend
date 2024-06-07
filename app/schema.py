@@ -21,7 +21,16 @@ class UserCreate(UserPublic):
         from_attributes = True
 
 
-
 class UserLogin(BaseModel):
     id: str
     password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id: str | None
+
+    class Config:
+        from_attributes = True
