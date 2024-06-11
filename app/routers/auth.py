@@ -14,7 +14,7 @@ router = APIRouter(
     tags=['Authentication']
 )
 
-@router.post('/login', response_model=schema.Token)
+@router.post('/login', response_model=schema.FrontendData)
 async def login(user_credentials: OAuth2PasswordRequestForm = Depends()
                 ,db:AsyncSession = Depends(get_db)):
     # OAuth2PasswordRequestFor stores what the user enters in a dictionary 
@@ -26,8 +26,11 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends()
     if user:
         if await utils.verify(user_credentials.password, user.password):
             access_token = await oauth2.create_access_token(data = {'user_id':user.id})
-            return {'access_token': access_token, 'token_type':'bearer'}
+            token_data = {'access_token': access_token, 'token_type':'bearer'}
+            user_public = schema.UserPublic(email=user.email, firstName=user.firstName,
+                                            lastName=user.lastName, role=user.role)
+            return schema.FrontendData(token=token_data,user=user_public)
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='invalid credentials')
     
-    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                          detail=f'user with email {user_credentials.username} not found')

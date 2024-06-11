@@ -11,7 +11,9 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[str] = mapped_column(String(8), primary_key=True, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    firstName: Mapped[int] = mapped_column(String, nullable= False)
+    lastName: Mapped[int] = mapped_column(String, nullable= False)
     email: Mapped[str] = mapped_column(String, nullable=False,unique=True)
     password: Mapped[str] = mapped_column(String, nullable= False)
     role: Mapped[str] = mapped_column(String, nullable=False)

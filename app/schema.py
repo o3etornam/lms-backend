@@ -3,14 +3,15 @@ from datetime import datetime
 from enum import Enum
 
 class Roles(str, Enum):
-    ADMIN = 'Administrator'
-    STUDENT = 'Student'
-    TEACHER = 'Teacher'
+    ADMIN = 'admin'
+    STUDENT = 'student'
+    TEACHER = 'teacher'
 
 
 class UserPublic(BaseModel):
-    id: str
     email: EmailStr
+    firstName: str
+    lastName: str
     role: Roles
 
 
@@ -22,7 +23,7 @@ class UserCreate(UserPublic):
 
 
 class UserLogin(BaseModel):
-    id: str
+    email: EmailStr
     password: str
 
 class Token(BaseModel):
@@ -34,3 +35,7 @@ class TokenData(BaseModel):
 
     class Config:
         from_attributes = True
+
+class FrontendData(BaseModel):
+    token: Token
+    user: UserPublic
